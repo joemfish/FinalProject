@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    username: bookshelf
+    password: bookshelf
+    url: jdbc:mysql://localhost:3306/bookshelf
+    
+  jpa:
+    hibernate:
+       ddl-auto: update
+    show-sql: true
