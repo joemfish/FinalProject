@@ -24,10 +24,10 @@ public class Genre {
 	private Long genreId;
 	private String genreName;
 	
+	
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name = "book_genre", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
+	@ManyToMany(mappedBy = "genres", cascade = CascadeType.PERSIST)
 	Set<Book> books = new HashSet<>();
 	
 

@@ -20,9 +20,9 @@ public class BookData {
 	private int rating;
 	private String yearPublished;
 
-	private BookAuthor bookAuthor;
+//	private BookAuthor bookAuthor;
 	
-	private Set<BookGenre> genres = new HashSet<>();
+	private Set<String> genres = new HashSet<>();
 	
 	public BookData(Book book) {
 		bookId = book.getBookId();
@@ -33,7 +33,7 @@ public class BookData {
 		yearPublished = book.getYearPublished();
 		
 		for(Genre genre : book.getGenres()) {
-			genres.add(new BookGenre(genre));
+			genres.add(genre.getGenreName());
 		}
 		
 		

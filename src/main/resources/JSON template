@@ -1,8 +1,10 @@
 {
-  "bookName": ,
-  "readOrNot": ,
-  "ownOrNot": ,
-  "rating": ,
-  "yearPublished" : 
-
-}
+	"bookName" : ,
+	"readOrNot" : ,
+	"ownOrNot" : ,
+	"rating" : ,
+	"yearPublished" : ,
+    "genres": [ ]
+    
+   }
+    

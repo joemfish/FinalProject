@@ -95,23 +95,26 @@ public class BookController {
 		return bookService.retrieveAuthorById(authorId);
 	}
 	
-	@PostMapping("/author/{authorId}/book/{bookId}/genre")
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public BookGenre addGenre(@PathVariable Long authorId, @PathVariable Long bookId, @RequestBody BookGenre bookGenre) {
-		log.info("Creating new genre");
-		return bookService.saveGenre(authorId, bookId, bookGenre);
-		
-	}
-	
-	@PutMapping("/author/{authorId}/book/{bookId}/genre/{genreId}")
-	public BookGenre modifyGenre(@PathVariable Long authorId, @PathVariable Long bookId, @PathVariable Long genreId, @RequestBody BookGenre bookGenre) {
-		log.info("Modifying genre with ID+{}", genreId );
-		return bookService.saveGenre(authorId, bookId, bookGenre);
-	}
-	
-	@GetMapping("author/{authorId}/book/{bookId}/genre")
-	public List<BookGenre> retrieveAllGenres(@PathVariable Long authorId, @PathVariable Long bookId) {
+//	@PostMapping("/author/{authorId}/book/{bookId}/genre")
+//	@ResponseStatus(code = HttpStatus.CREATED)
+//	public BookGenre addGenre(@PathVariable Long authorId, @PathVariable Long bookId, @RequestBody BookGenre bookGenre) {
+//		log.info("Creating new genre");
+//		return bookService.saveGenre(authorId, bookId, bookGenre);
+//		
+//	}
+//	
+//	@PutMapping("/author/{authorId}/book/{bookId}/genre/{genreId}")
+//	public BookGenre modifyGenre(@PathVariable Long authorId, @PathVariable Long bookId, @PathVariable Long genreId, @RequestBody BookGenre bookGenre) {
+//		log.info("Modifying genre with ID+{}", genreId );
+//		bookGenre.setGenreId(genreId);
+//		return bookService.saveGenre(authorId, bookId, bookGenre);
+//	}
+//	
+	@GetMapping("/genre")
+	public List<BookGenre> retrieveAllGenres() {
 		log.info("Retrieving all genres");
 		return bookService.retrieveAllGenres();
 	}
+
+
 }

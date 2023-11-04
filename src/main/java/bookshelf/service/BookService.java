@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class BookService {
 	@Transactional(readOnly = false)
 	public BookData saveBook(Long authorId, BookData bookData) {
 		Author author = findAuthorById(authorId);
+		
+		Set<Genre> genres = genreDao.findAllByGenreNameIn(bookData.getGenres());
+		
 		Long bookId = bookData.getBookId();
 		Book book = findOrCreateBook(authorId, bookId);
 		
@@ -40,6 +44,11 @@ public class BookService {
 		
 		book.setAuthor(author);
 		author.getBooks().add(book);
+		
+		for(Genre genre : genres) {
+			genre.getBooks().add(book);
+			book.getGenres().add(genre);
+		}
 		
 		return new BookData(bookDao.save(book));
 	}
@@ -159,50 +168,51 @@ public class BookService {
 		return new BookAuthor(author);
 	}
 
-	@Transactional(readOnly = false)
-	public BookGenre saveGenre(Long authorId, Long bookId, BookGenre bookGenre) {
-		Book book = findBookById(authorId, bookId);
-		Long genreId = bookGenre.getGenreId();
-		Genre genre = findOrCreateGenre(bookId, genreId);
-		copyGenreFields(genre, bookGenre);
-		
-		book.getGenres().add(genre);
-		
-		return new BookGenre(genreDao.save(genre));
-		
-	}
-
-	private void copyGenreFields(Genre genre, BookGenre bookGenre) {
-			genre.setGenreId(bookGenre.getGenreId());
-			genre.setGenreName(bookGenre.getGenreName());
-	}
-
-	private Genre findOrCreateGenre(Long bookId, Long genreId) {
-		Genre genre;
-		
-		if(Objects.isNull(genreId)) {
-			genre = new Genre();
-		} else {
-			genre = findGenreById(bookId, genreId);
-		}
-		
-		return genre;
-	}
-
-	private Genre findGenreById(Long bookId, Long genreId) {
-		Genre genre = genreDao.findById(genreId).orElseThrow(() -> new NoSuchElementException("Genre with ID=" + genreId + " does not exist."));
-		
-		for (Book book : genre.getBooks()) {
-			if (book.getBookId().equals(bookId)) {
-				genre = new Genre();
-			} else {
-				throw new IllegalArgumentException("Genre with ID=" + genreId + " is not a genre for book with ID=" + bookId + " .");
-			}
-		}
-		
-		return genre;
-	}
-
+//	@Transactional(readOnly = false)
+//	public BookGenre saveGenre(Long authorId, Long bookId, BookGenre bookGenre) {
+//		Book book = findBookById(authorId, bookId);
+//		Long genreId = bookGenre.getGenreId();
+//		Genre genre = findOrCreateGenre(bookId, genreId);
+//		copyGenreFields(genre, bookGenre);
+//		
+//		book.getGenres().add(genre);
+//		genre.getBooks().add(book);
+//		
+//		return new BookGenre(genreDao.save(genre));
+//		
+//	}
+//
+//	private void copyGenreFields(Genre genre, BookGenre bookGenre) {
+//			genre.setGenreId(bookGenre.getGenreId());
+//			genre.setGenreName(bookGenre.getGenreName());
+//	}
+//
+//	private Genre findOrCreateGenre(Long bookId, Long genreId) {
+//		Genre genre;
+//		
+//		if(Objects.isNull(genreId)) {
+//			genre = new Genre();
+//		} else {
+//			genre = findGenreById(bookId, genreId);
+//		}
+//		
+//		return genre;
+//	}
+//
+//	private Genre findGenreById(Long bookId, Long genreId) {
+//		Genre genre = genreDao.findById(genreId).orElseThrow(() -> new NoSuchElementException("Genre with ID=" + genreId + " does not exist."));
+//		
+//		for (Book book : genre.getBooks()) {
+//			if (book.getBookId().equals(bookId)) {
+//				genre = new Genre();
+//			} else {
+//				throw new IllegalArgumentException("Genre with ID=" + genreId + " is not a genre for book with ID=" + bookId + " .");
+//			}
+//		}
+//		
+//		return genre;
+//	}
+//
 	public List<BookGenre> retrieveAllGenres() {
 		List<Genre> genres = genreDao.findAll();
 		List<BookGenre> bookGenres = new LinkedList<BookGenre>();
@@ -215,5 +225,9 @@ public class BookService {
 		
 		return bookGenres;
 	}
+
+
+
+
 
 }
